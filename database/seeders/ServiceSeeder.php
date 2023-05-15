@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Builders\ServiceBuilder;
 use Illuminate\Database\Seeder;
+use Modules\Service\Builders\ServiceBuilder;
 
 class ServiceSeeder extends Seeder
 {
@@ -12,6 +12,8 @@ class ServiceSeeder extends Seeder
      */
     public function run(): void
     {
+
+        die('need modifing');
 
         ServiceBuilder::builder()
             ->setName('Facebook')

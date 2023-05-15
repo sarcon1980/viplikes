@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Builders;
+namespace Modules\Service\Builders;
 
-use App\Models\Service;
-use App\Models\ServiceItem;
+use Modules\Service\Models\Service;
+use Modules\Service\Models\ServiceItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -62,7 +62,7 @@ class ServiceBuilder
 
     public function setParent(string $alias)
     {
-        $service = \App\Models\Service::query()->where('alias', $alias)->first();
+        $service = \Modules\Service\Models\Service::query()->where('alias', $alias)->first();
         $this->parent_id = $service->id;
         return $this;
     }
@@ -140,7 +140,7 @@ class ServiceBuilder
             return throw new \Exception('Необходимо заполнить items или options');
         }
 
-        $model = new \App\Models\Service;
+        $model = new \Modules\Service\Models\Service;
         $model->alias = $this->alias ?: Str::slug($this->name);
         $model->parent_id = $this->parent_id;
         $model->url = $this->url ?: Str::slug($this->name);

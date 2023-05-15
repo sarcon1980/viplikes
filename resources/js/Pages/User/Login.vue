@@ -64,7 +64,7 @@ const props = defineProps({
 });
 
 const auth = () => {
-    form.post(route('login'));
+    form.post(route('auth'));
 }
 </script>
 

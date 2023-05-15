@@ -32,8 +32,8 @@
         <table class="table table-striped" v-if="items.length">
             <thead>
             <tr>
-                <th>#</th>
-                <th>Статус</th>
+                <th class="text-center">#</th>
+                <th class="text-center">Статус</th>
                 <th>Состав</th>
                 <th>Тип</th>
                 <th>Стоимость</th>
@@ -47,11 +47,12 @@
                        :component-data="getComponentData()" @end="onEnd(draggableList, $event,)">
                 <template #item="{ element, index }">
                     <tr>
-                        <td scope="row"><i class="fa fas fa-ellipsis-v  drag"></i> {{ index + 1 }}</td>
-                        <td v-html="showStatus(element.is_active)"></td>
+                        <td scope="row" class="text-center"><i class="fa fas fa-ellipsis-v  drag"></i>
+                        </td>
+                        <td class="text-center" v-html="showStatus(element.is_active)"></td>
                         <td>
-                            <div v-for="t in element.name">
-                            {{ t.count }} {{ t.text }}
+                            <div v-for="t in element.package_items">
+                                {{ t.name }}
                             </div>
                         </td>
                         <td>{{ element.type }}</td>
@@ -83,133 +84,138 @@
                         </button>
                     </div>
                     <div class="modal-body overflow-hidden">
-                        <div class="">
+
                             <form @submit.prevent="checkMode">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class=" col-4">
-                                            <div class="form-group">
-                                                <label for="name" class="">Состав пакета</label>
-                                                <div v-for=" (title,index) in nameDataRef" :key="index">
-                                                    <div class="input-group mb-3">
-                                                        <input
-                                                               type="number" required
-                                                               class="form-control"
-                                                               placeholder="count"
-                                                               autofocus="autofocus"
-                                                               autocomplete="off"
-                                                               v-model="title.count"
-                                                               :name="'count_' + index"
-                                                               :class="{ 'is-invalid' : errors[`name.${index}.count`]}"
-                                                        >
-                                                        <div class="input-group-append  1w-50"
-                                                             style="width: 60% !important;">
-                                                                <span class="input-group-text"
-                                                                >{{ title.text }}</span>
-                                                        </div>
-                                                    </div>
-                                                    <span class="invalid-feedback mb-3"
-                                                          :class="{ 'd-block' : errors[`name.${index}.count`]}"
-                                                    >
-                                                        {{errors[`name.${index}.count`]}}</span>
-                                                </div>
+                                <div class="p-3">
+                                <div class="row">
+                                    <div class=" col-12">
+                                        <div class="form-group">
+                                            <label for="name" class="">Состав пакета</label>
+
+                                            <!--                                                {{  JSON.stringify(options) }}-->
+                                            <!--                                                    <hr>-->
+                                            <!--                                                {{ JSON.stringify(optionsOrg)}}-->
+                                            <div>
+                                                <multiselect
+                                                    v-model="form.package_items"
+                                                    :options="options"
+                                                    :multiple="true"
+                                                    group-values="items"
+                                                    group-label="name"
+                                                    :group-select="false"
+                                                    placeholder="Type to search"
+                                                    track-by="id"
+                                                    label="name"
+                                                    :max="3"
+                                                    :max-height="350"
+                                                    :limit="3"
+                                                    :class="{ 'is-invalid' : form.errors.package_items }"
+
+                                                >
+                                                </multiselect>
+                                            </div>
+                                            <div class="invalid-feedback mb-3"
+                                                 :class="{ 'd-block' : form.errors.package_items}">
+                                                {{ form.errors.package_items }}
                                             </div>
                                         </div>
+                                        <hr>
+                                    </div>
 
-                                        <div class=" col-4">
-                                            <div v-if="service.options.types">
-                                                <label for="type" class="">Вариант</label>
-                                                <select v-model="form.type" class="form-control custom-select">
-                                                    <option v-for="type in service.options.types"
-                                                            v-bind:value="type.text"
-                                                            id="type"
-                                                    >
-                                                        {{ type.text }}
-                                                    </option>
-                                                </select>
-                                            </div>
+                                    <div class=" col-4">
+                                        <div v-if="service.options.types">
+                                            <label for="type" class="">Вариант</label>
+                                            <select v-model="form.type" class="form-control custom-select">
+                                                <option v-for="type in service.options.types"
+                                                        v-bind:value="type.text"
+                                                        id="type"
+                                                >
+                                                    {{ type.text }}
+                                                </option>
+                                            </select>
                                         </div>
                                     </div>
-                                    <hr>
-                                    <div class="row">
-                                        <div class=" col-4">
-                                            <div class="form-group">
-                                                <label for="name" class="">Стоимость</label>
-                                                <div class="input-group mb-3">
-                                                    <input type="text" class="form-control" placeholder="Цена"
-                                                           v-model="form.price"
-                                                           :class="{ 'is-invalid' : form.errors.price }"
-                                                           autofocus="autofocus" autocomplete="off"
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class=" col-4">
+                                        <div class="form-group">
+                                            <label for="name" class="">Стоимость</label>
+                                            <div class="input-group mb-3">
+                                                <input type="text" class="form-control" placeholder="Цена"
+                                                       v-model="form.price"
+                                                       :class="{ 'is-invalid' : form.errors.price }"
+                                                       autofocus="autofocus" autocomplete="off"
 
-                                                    >
-                                                    <div class="input-group-append">
-                                                        <span class="input-group-text">$</span>
-                                                    </div>
-                                                    <div class="invalid-feedback mb-3"
-                                                         :class="{ 'd-block' : form.errors.price}">
-                                                        {{ form.errors.price }}
-                                                    </div>
+                                                >
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <div class="invalid-feedback mb-3"
+                                                     :class="{ 'd-block' : form.errors.price}">
+                                                    {{ form.errors.price }}
                                                 </div>
                                             </div>
-
-                                            <div class="form-group">
-                                                <label for="name" class="">Скидка</label>
-                                                <div class="input-group mb-3">
-                                                    <input type="text" class="form-control" placeholder="Цена"
-                                                           v-model="form.discount"
-                                                           :class="{ 'is-invalid' : form.errors.discount }"
-                                                           autofocus="autofocus" autocomplete="off"
-                                                    >
-                                                    <div class="input-group-append">
-                                                        <span class="input-group-text">%</span>
-                                                    </div>
-                                                    <div class="invalid-feedback mb-3"
-                                                         :class="{ 'd-block' : form.errors.discount}">
-                                                        {{ form.errors.discount }}
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-check">
-                                                <input v-model="form.is_active" class="form-check-input" type="checkbox"
-                                                       true-value="1"
-                                                       false-value="0">
-                                                <label class="form-check-label">Активен</label>
-                                            </div>
-
                                         </div>
-                                        <div class=" col-4">
-                                            <div class="form-group">
-                                                <label for="name" class="">Стоимость продажи</label>
-                                                <div class="input-group mb-3">
-                                                    <input type="text" class="form-control" placeholder="Цена"
-                                                           v-model="form.price_for_sale"
-                                                           :class="{ 'is-invalid' : form.errors.price_for_sale }"
-                                                           autofocus="autofocus" autocomplete="off"
 
-                                                    >
-                                                    <div class="input-group-append">
-                                                        <span class="input-group-text">$</span>
-                                                    </div>
-                                                    <div class="invalid-feedback mb-3"
-                                                         :class="{ 'd-block' : form.errors.price_for_sale}">
-                                                        {{ form.errors.price_for_sale }}
-                                                    </div>
+                                        <div class="form-group">
+                                            <label for="name" class="">Скидка</label>
+                                            <div class="input-group mb-3">
+                                                <input type="text" class="form-control" placeholder="Цена"
+                                                       v-model="form.discount"
+                                                       :class="{ 'is-invalid' : form.errors.discount }"
+                                                       autofocus="autofocus" autocomplete="off"
+                                                >
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">%</span>
+                                                </div>
+                                                <div class="invalid-feedback mb-3"
+                                                     :class="{ 'd-block' : form.errors.discount}">
+                                                    {{ form.errors.discount }}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-check">
+                                            <input v-model="form.is_active" class="form-check-input" type="checkbox"
+                                                   true-value="1"
+                                                   false-value="0">
+                                            <label class="form-check-label">Активен</label>
+                                        </div>
+
+                                    </div>
+                                    <div class=" col-4">
+                                        <div class="form-group">
+                                            <label for="name" class="">Стоимость продажи</label>
+                                            <div class="input-group mb-3">
+                                                <input type="text" class="form-control" placeholder="Цена"
+                                                       v-model="form.price_for_sale"
+                                                       :class="{ 'is-invalid' : form.errors.price_for_sale }"
+                                                       autofocus="autofocus" autocomplete="off"
+
+                                                >
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <div class="invalid-feedback mb-3"
+                                                     :class="{ 'd-block' : form.errors.price_for_sale}">
+                                                    {{ form.errors.price_for_sale }}
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                </div>
                                 <div class="modal-footer justify-content-between">
-                                    <button type="button" class="btn btn-danger text-uppercase"
+                                    <button type="button" class="btn btn-danger 1btn-sm"
                                             @click="closeModal">Отмена
                                     </button>
-                                    <button type="submit" class="btn btn-info text-uppercase"
+                                    <button type="submit" class="btn btn-info 1btn-sm"
                                             :disabled="form.processing">{{ buttonTxt }}
                                     </button>
                                 </div>
                             </form>
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -219,11 +225,12 @@
 </template>
 
 <script>
+
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import {Head, Link, router} from '@inertiajs/vue3';
-
 import draggable from "vuedraggable";
 import {ref} from "vue";
+import Multiselect from '@suadelabs/vue3-multiselect'
 
 
 export default {
@@ -233,7 +240,9 @@ export default {
         title: String,
         service: Object,
         items: Object,
-        errors: {}
+        errors: {},
+        itemsForPackage: Object,
+
     },
     components: {
         AdminLayout,
@@ -241,17 +250,13 @@ export default {
         Head,
         draggable,
         ref,
+        Multiselect
     },
 
     setup(props, data) {
         const draggableList = ref(props.items);
-
-        const nameData = props.service.options.title
-        const nameDataRef = ref(nameData)
-
         return {
             draggableList,
-            nameDataRef,
         };
     },
 
@@ -261,7 +266,7 @@ export default {
             editMode: false,
             form: this.$inertia.form({
                 id: '',
-                name: [],
+                // name: [],
                 is_active: 1,
                 service_id: this.service.id,
                 type: this.service.options ? this.service.options.types[0]['text'] : '',
@@ -269,8 +274,12 @@ export default {
                 price: 0,
                 price_for_sale: 0,
                 discount: 0,
+                package_items: []
             }),
-            inputValues: []
+            inputValues: [],
+
+            options: this.itemsForPackage,
+            selected: null,
         }
     },
 
@@ -292,26 +301,6 @@ export default {
 
     methods: {
 
-        setInitialValues(item) {
-            this.nameDataRef.forEach((field, index) => {
-                field.count = this.getNameCount(field.text, item) || '';
-            });
-        },
-
-        getNameCount(text, item) {
-
-            let count = 0 ;
-
-            item.name.forEach((field, index) => {
-                if (field.text === text) {
-                    count = field.count
-                }
-            });
-
-            return count
-        },
-
-
         showStatus(value) {
             return value ? '<span class="badge  badge-success">on</span>' : '<span class="badge  badge-danger">off</span>'
         },
@@ -326,37 +315,24 @@ export default {
             this.editMode = false
             this.form.reset()
 
-            this.nameDataRef.forEach(name => {
-                if (typeof name.count != 'undefined') {
-                    //console.log( name.count )
-                    delete name.count
-                }
-            });
-
             $('#modal-lg').modal('hide')
         },
 
         editModal(item) {
-
-            this.setInitialValues(item)
-
             this.editMode = true
             $('#modal-lg').modal('show')
             this.editedIndex = 1
             this.form.id = item.id
-            this.form.name = item.name
             this.form.is_active = item.is_active
             this.form.type = item.type
             this.form.count = item.count
             this.form.price = item.price
             this.form.price_for_sale = item.price_for_sale
             this.form.discount = item.discount
+            this.form.package_items = item.package_items
         },
 
         createItem() {
-
-            this.form.name = this.nameDataRef;
-
             this.form.post(this.route('admin.service-items.store'), {
                 preserveScroll: true,
                 onSuccess: () => {
@@ -371,8 +347,6 @@ export default {
         },
 
         editItem() {
-
-            this.form.name = this.nameDataRef;
 
             this.form.patch(this.route('admin.service-items.update', this.form.id, this.form), {
                 preserveScroll: true,

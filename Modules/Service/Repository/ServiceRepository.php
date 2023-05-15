@@ -7,6 +7,8 @@ use Modules\Service\Models\Service;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Collection;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class ServiceRepository extends BaseRepository
 {
@@ -69,9 +71,7 @@ class ServiceRepository extends BaseRepository
     private function saveOptions(Service $model, array $data, $method = 'create'): void
     {
         if ($model->isProductType()) {
-            $this->options['title'] = json_encode($data['optionsTitleProduct']);
-        } elseif ($model->isPackageType()) {
-            $this->options['title'] = json_encode($data['optionsTitle']);
+            $this->options['title'] = $data['optionsTitleProduct'];
         }
 
         if ($data['optionsAccount'])
@@ -115,4 +115,5 @@ class ServiceRepository extends BaseRepository
     {
         return $this->model->query()->with(['items', 'options', 'children'])->find($id);
     }
+
 }

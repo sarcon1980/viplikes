@@ -44,12 +44,12 @@ class CreateServiceRequest extends FormRequest
                 'string',
                 'nullable'
             ],
-            'optionsTitle' =>
-                [
-                    Rule::requiredIf($this->type == Service::TYPE_PACKAGE),
-                    Rule::when($this->type == Service::TYPE_PACKAGE, 'max:3|min:3|array'),
-                ],
-            'optionsTitle.*.text' => 'required|string',
+//            'optionsTitle' =>
+//                [
+//                    Rule::requiredIf($this->type == Service::TYPE_PACKAGE),
+//                    Rule::when($this->type == Service::TYPE_PACKAGE, 'max:3|min:3|array'),
+//                ],
+//            'optionsTitle.*.text' => 'required|string',
 
             'optionsTitleProduct' =>
                 [

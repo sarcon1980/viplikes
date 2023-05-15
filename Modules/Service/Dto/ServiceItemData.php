@@ -20,5 +20,5 @@ class ServiceItemData extends DataTransferObject
 
     public float $discount;
 
-    public ?array $name;
+    public ?array $package_items;
 }

@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('', function () {
+    if (!Auth::check()) {
+        return redirect()->route('login');
+    }
+    return redirect()->route('admin.service.index');
+});
+
+Route::get('admin', function () {
+    if (!Auth::check()) {
+        return redirect()->route('login');
+    }
+    return redirect()->route('admin.service.index');
 });

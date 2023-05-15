@@ -1,6 +1,6 @@
 <template>
     <nav>
-        <ul class="pagination pagination-sm m-0 float-right">
+        <ul class="pagination pagination-sm m-0 1float-right">
             <li class="page-item"
                 :class="[
                     link.url === null ? 'disabled' : '',
@@ -9,14 +9,18 @@
                 v-for="(link, index) in links"
                 :key="index"
             >
-                <inertia-link class="page-link" :href="link.url === null ? '#' : link.url" v-html="link.label"></inertia-link>
+                <Link class="page-link" :href="link.url === null ? '#' : link.url" v-html="link.label"></Link>
             </li>
         </ul>
     </nav>
 </template>
 
 <script>
+import { Link } from '@inertiajs/vue3'
     export default {
         props: ['links'],
+        components: {
+            Link,
+        },
     }
 </script>

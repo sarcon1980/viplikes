@@ -4,6 +4,7 @@ namespace Modules\Service\Http\Requests\Admin;
 
 use Modules\Service\Rules\CheckedCountServiceItemRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Modules\Service\Rules\CheckedPackageItemRule;
 
 class CreateServiceItemRequest extends FormRequest
 {
@@ -30,9 +31,11 @@ class CreateServiceItemRequest extends FormRequest
                 'nullable',
             ],
 
-            'name' =>   [ ],
-
-            'name.*.count' => 'required|int',
+            'package_items' => [
+                resolve(CheckedPackageItemRule::class, ['item' => $this]),
+                'array',
+                'nullable'
+            ],
 
             'service_id' => [
                 'int',
@@ -47,6 +50,7 @@ class CreateServiceItemRequest extends FormRequest
             'count' => [
                 resolve(CheckedCountServiceItemRule::class, ['item' => $this]),
                 'int',
+                'nullable'
             ],
 
             'price' => [

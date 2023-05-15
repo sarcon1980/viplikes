@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Wildside\Userstamps\Userstamps;
 use Illuminate\Database\Eloquent\Builder;
@@ -32,6 +33,11 @@ class ServiceItem extends Model
     use Userstamps, SoftDeletes, HasFactory;
 
     const IS_ACTIVE = true;
+
+    const COUNT_PACKAGE_ITEMS = 3;
+
+    protected $appends = ['package_items'];
+   // protected $with= ['service'];
 
     protected $fillable = [
         'is_active',
@@ -69,8 +75,27 @@ class ServiceItem extends Model
         return $query->where('is_active', self::IS_ACTIVE);
     }
 
-    public function getNameAttribute()
+    public function getPackageItemsAttribute()
     {
-        return json_decode($this->attributes['name']);
+        return $this->itemsPackage()->get()->map(function ($item) {
+            return [
+                "id" => $item['id'],
+                "name" => $item['count'] . ' ' . $item->service->options->title . ' '. $item['type'],
+                "type" => $item['type']
+            ];
+        });
+    }
+
+    //Для состава пакета
+    public function itemsPackage(): BelongsToMany
+    {
+        return $this->belongsToMany(self::class, 'service_package_items', 'service_item_id', 'item_id')
+            ->withTimestamps();
+    }
+
+//Для состава пакета
+    public function package(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'service_package_items', 'id', 'id');
     }
 }

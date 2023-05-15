@@ -3,7 +3,7 @@
     <aside class="main-sidebar sidebar-dark-primary">
         <!-- Brand Logo -->
         <a href="index3.html" class="brand-link">
-            <span class="brand-text font-weight-light"> <b>VipLinks</b> admin</span>
+            <span class="brand-text font-weight-light"> <b>VipLikes</b> admin</span>
         </a>
         <!-- Sidebar -->
         <div class="sidebar">
@@ -11,31 +11,6 @@
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                     <div class="nav-header">ПАНЕЛЬ</div>
-                    <!-- Add icons to the links using the .nav-icon class
-                         with font-awesome or any other icon font library -->
-                    <!--                    <li class="nav-item menu-open">-->
-                    <!--                        <a href="#" class="nav-link 1active">-->
-                    <!--                            <i class="nav-icon fas fa-tachometer-alt"></i>-->
-                    <!--                            <p>-->
-                    <!--                                Starter Pages-->
-                    <!--                                <i class="right fas fa-angle-left"></i>-->
-                    <!--                            </p>-->
-                    <!--                        </a>-->
-                    <!--                        <ul class="nav nav-treeview">-->
-                    <!--                            <li class="nav-item">-->
-                    <!--                                <a href="#" class="nav-link active">-->
-                    <!--                                    <i class="far fa-circle nav-icon"></i>-->
-                    <!--                                    <p>Active Page</p>-->
-                    <!--                                </a>-->
-                    <!--                            </li>-->
-                    <!--                            <li class="nav-item">-->
-                    <!--                                <a href="#" class="nav-link">-->
-                    <!--                                    <i class="far fa-circle nav-icon"></i>-->
-                    <!--                                    <p>Inactive Page</p>-->
-                    <!--                                </a>-->
-                    <!--                            </li>-->
-                    <!--                        </ul>-->
-                    <!--                    </li>-->
 
                     <li class="nav-item">
                         <a href="#" class="nav-link">
@@ -52,10 +27,10 @@
                     </li>
 
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <Link :href="route('admin.orders.index')" class="nav-link">
                             <i class="nav-icon fas fa-cart-plus"></i>
-                            <p>Заказы (dev)</p>
-                        </a>
+                            <p>Заказы</p>
+                        </Link>
                     </li>
 
                     <li class="nav-item">
@@ -95,11 +70,28 @@
                         </Link>
                     </li>
 
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
+                    <li class="nav-item menu2-open">
+                        <a href="#" class="nav-link 2active">
                             <i class="nav-icon fas fa-key"></i>
-                            <p>Права и роли</p>
+                            <p>
+                                Права и доступы
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
                         </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <Link :href="route('admin.roles.index')" class="nav-link">
+                                    <i class="nav-icon fa "></i>
+                                    <p>Роли</p>
+                                </Link>
+                            </li>
+                            <li class="nav-item">
+                                <Link :href="route('admin.permissions.index')" class="nav-link">
+                                    <i class="nav-icon fa"></i>
+                                    <p>Права</p>
+                                </Link>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </nav>

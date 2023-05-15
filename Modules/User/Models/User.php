@@ -9,11 +9,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 use Wildside\Userstamps\Userstamps;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, Userstamps;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, Userstamps, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -43,11 +44,18 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'created_at' => 'datetime:d-m-Y',
     ];
 
-    protected $with = ['profile'];
+    protected $with = ['profile','roles'];
+
     public function profile(): HasOne
     {
         return $this->hasOne(resolve(Profile::class));
+    }
+
+    public function isDeleted(): bool
+    {
+        return $this->deleted_at != null;
     }
 }
